@@ -6,6 +6,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
 {
     HWND    hWnd;
     MSG     msg;
+    BOOL    bRet;
 
     //  Detect previous instance, and bail if there is one.
     if ( FindWindow( THIS_CLASSNAME, THIS_TITLE ) )
@@ -28,7 +29,10 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
     }
 
     //  Message loop
-    while ( GetMessage( &msg, NULL, 0, 0 ) ) {
+    while ( TRUE ) {
+        bRet = GetMessage( &msg, NULL, 0, 0 );
+        if ( bRet == 0 || bRet == -1)
+          break;
         TranslateMessage( &msg );
         DispatchMessage( &msg );
     }
