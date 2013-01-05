@@ -39,7 +39,6 @@ void    OnTrayIconLBtnDblClick( HWND hWnd );
 
 void    OnClose( HWND hWnd );
 
-void    RegisterMainWndClass( HINSTANCE hInstance );
-void    UnregisterMainWndClass( HINSTANCE hInstance );
+void    RegisterApplicationClass( HINSTANCE hInstance );
 
 #endif

@@ -1,4 +1,3 @@
-
 #include "trayicon.h"
 
 //  Entry point
@@ -17,7 +16,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
     //  its owner.  Starting with Windows 2000, you can make some kind of
     //  "message target" window that just has a message queue and nothing
     //  much else, but we'll be backwardly compatible here.
-    RegisterMainWndClass( hInst );
+    RegisterApplicationClass( hInst );
 
     hWnd = CreateWindow( THIS_CLASSNAME, THIS_TITLE,
                          0, 0, 0, 100, 100, NULL, NULL, hInst, NULL );
@@ -37,9 +36,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
         DispatchMessage( &msg );
     }
 
-    UnregisterMainWndClass( hInst );
+    UnregisterClass( THIS_CLASSNAME, hInst );
 
     return msg.wParam;
 }
-
 

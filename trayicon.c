@@ -141,8 +141,6 @@ static LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
     }
 }
 
-
-//-----------------------------------------------------------------------------
 void OnClose( HWND hWnd )
 {
     //  Remove icon from system tray.
@@ -151,8 +149,6 @@ void OnClose( HWND hWnd )
     PostQuitMessage( 0 );
 }
 
-
-//-----------------------------------------------------------------------------
 //  Create and display our little popupmenu when the user right-clicks on the
 //  system tray.
 BOOL ShowPopupMenu( HWND hWnd, POINT *curpos, int wDefaultItem )
@@ -216,7 +212,6 @@ BOOL OnCommand( HWND hWnd, WORD wID, HWND hCtl )
             // This happens when the right-click menu is canceled.
             return 0;
     }
-
 }
 
 
@@ -273,16 +268,12 @@ void OnTrayIconLBtnDblClick( HWND hWnd )
     SendMessage( hWnd, WM_COMMAND, ID_ABOUT, 0 );
 }
 
-
-//-----------------------------------------------------------------------------
 void OnInitMenuPopup( HWND hWnd, HMENU hPop, UINT uID )
 {
     //  stub
 }
 
-
-//-----------------------------------------------------------------------------
-void RegisterMainWndClass( HINSTANCE hInstance )
+void RegisterApplicationClass( HINSTANCE hInstance )
 {
     WNDCLASSEX wclx;
     memset( &wclx, 0, sizeof( wclx ) );
@@ -304,15 +295,6 @@ void RegisterMainWndClass( HINSTANCE hInstance )
     RegisterClassEx( &wclx );
 }
 
-
-//-----------------------------------------------------------------------------
-void UnregisterMainWndClass( HINSTANCE hInstance )
-{
-    UnregisterClass( THIS_CLASSNAME, hInstance );
-}
-
-
-//-----------------------------------------------------------------------------
 HICON LoadSmallIcon( HINSTANCE hInstance, UINT uID )
 {
     return LoadImage( hInstance, MAKEINTRESOURCE( uID ), IMAGE_ICON,
