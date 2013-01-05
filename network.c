@@ -10,10 +10,17 @@
 #include "port-def.h"
 #define BUFLEN 2048
 
-void network_start(int (*target_function)(wchar_t*) )
+static SOCKET ListenSocket = INVALID_SOCKET;
+static BOOL inited = FALSE;
+
+void network_start()
 {
+  if ( inited )
+    return;
+  inited = TRUE;
+  printf("initing!!\n");
+
   WSADATA wsaData;
-  // struct addrinfo *ptr = NULL;
   struct addrinfo *result = NULL, hints;
   int iResult;
 
@@ -35,30 +42,28 @@ void network_start(int (*target_function)(wchar_t*) )
   iResult = getaddrinfo("localhost", PORT, &hints, &result);
   if (iResult != 0) {
       printf("getaddrinfo failed: %d\n", iResult);
-      WSACleanup();
+
       return;
       // return 1;
   }
 
 
-  SOCKET ListenSocket = INVALID_SOCKET;
   ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 
   if (ListenSocket == INVALID_SOCKET) {
       printf("Error at socket(): %d\n", WSAGetLastError());
       freeaddrinfo(result);
-      WSACleanup();
+
       // return 1;
       return;
   }
 
-  // Setup the TCP listening socket
   iResult = bind( ListenSocket, result->ai_addr, (int)result->ai_addrlen);
   freeaddrinfo(result);
   if (iResult == SOCKET_ERROR) {
       printf("bind failed with error: %d\n", WSAGetLastError());
       closesocket(ListenSocket);
-      WSACleanup();
+
       // return 1;
       return;
   }
@@ -66,14 +71,17 @@ void network_start(int (*target_function)(wchar_t*) )
   if ( listen( ListenSocket, SOMAXCONN ) == SOCKET_ERROR ) {
     printf( "Listen failed with error: %d\n", WSAGetLastError() );
     closesocket(ListenSocket);
-    WSACleanup();
+
     return;
   }
+}
 
-
-  // CUT HERE - anything from here down should be handled in the bg.
-  //////////////////////////////////////////////
-
+int network_loop(int (*handle_message)(wchar_t*))
+{
+  network_start();
+  if ( ListenSocket == INVALID_SOCKET )
+    return -1;
+  int iResult;
 
   SOCKET ClientSocket = INVALID_SOCKET;
 
@@ -81,8 +89,7 @@ void network_start(int (*target_function)(wchar_t*) )
   if (ClientSocket == INVALID_SOCKET) {
       printf("accept failed: %d\n", WSAGetLastError());
       closesocket(ListenSocket);
-      WSACleanup();
-      return;
+      return -2;
   }
 
   char recvbuf[BUFLEN];
@@ -100,8 +107,8 @@ void network_start(int (*target_function)(wchar_t*) )
         printf("converted %d chars\n", iResult);
         printf ("%S\n", textbuf);
 
-        if ( target_function ) {
-          (*target_function)(textbuf);
+        if ( handle_message ) {
+          (*handle_message)(textbuf);
         }
 
       } else if (iResult == 0)
@@ -109,25 +116,24 @@ void network_start(int (*target_function)(wchar_t*) )
       else {
           printf("recv failed: %d\n", WSAGetLastError());
           closesocket(ClientSocket);
-          WSACleanup();
-          return;
+          return -3;
       }
 
   } while (iResult > 0);
 
-  // shutdown the send half of the connection since no more data will be sent
   iResult = shutdown(ClientSocket, SD_SEND);
   closesocket(ClientSocket);
-  WSACleanup();
 
   if (iResult == SOCKET_ERROR) {
     printf("shutdown failed: %d\n", WSAGetLastError());
-    return;
+    return -4;
   }
 
-  return network_start(target_function);
+  return 0;
 }
+
 void network_stop()
 {
+  WSACleanup();
 }
 
