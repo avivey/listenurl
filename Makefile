@@ -22,11 +22,16 @@ MODE = $(DEBUG_MODE)
 # CFLAGS += -D_WIN32_IE=0x0500
 # CFLAGS += -D_WIN32_WINDOWS=0x0410
 
-listenurl.exe: trayicon.o listenurl.o
+netdemo.exe: network.o netdemo.o
 	$(CC) $(MODE) -Wl -o $@ $^ $(LIBS)
 
-listenurl.o: trayicon.h
+listenurl.exe: trayicon.o listenurl.o network.o
+	$(CC) $(MODE) -Wl -o $@ $^ $(LIBS)
+
+netdemo.o: network.h
+listenurl.o: trayicon.h network.h
 trayicon.o: trayicon.h
+network.o: network.h port-def.h
 
 clean:
 	rm -f *.o *.exe *.res.o *.gch
