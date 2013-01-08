@@ -1,6 +1,6 @@
 
 TOOLPATH = i586-mingw32msvc-
-CC = $(TOOLPATH)gcc
+CC = $(TOOLPATH)cc
 
 CFLAGS = -mno-cygwin -Wall -Werror -O2 -D_WINDOWS \
 		 -D_NO_OLDNAMES -DNO_MULTIMON -DNO_HTMLHELP \
@@ -26,7 +26,7 @@ netdemo.exe: network.o netdemo.o
 	$(CC) $(MODE) -Wl -o $@ $^ $(LIBS)
 
 listenurl.exe: trayicon.o listenurl.o network.o
-	$(CC) $(MODE) -Wl -o $@ $^ $(LIBS)
+	$(CC) $(MODE) -o $@ $^ $(LIBS)
 
 netdemo.o: network.h
 listenurl.o: trayicon.h network.h
@@ -34,4 +34,4 @@ trayicon.o: trayicon.h
 network.o: network.h port-def.h
 
 clean:
-	rm -f *.o *.exe *.res.o *.gch
+	rm -f *.o *.exe *.res.o
