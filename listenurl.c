@@ -58,9 +58,8 @@ void on_close_listener( HWND hWnd )
   network_stop();
 }
 
-int do_something(LPCTSTR t) {
-  // return MessageBox( NULL, "got msg", "eek",
-                    // MB_ICONERROR | MB_OK | MB_TOPMOST );
+int invoke_url(LPCTSTR url) {
+  return (int)ShellExecute(NULL, _T("open"), _T("invoke-url.js"), url, NULL, SW_SHOWNORMAL );
 }
 
 LRESULT app_window_proc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -75,7 +74,7 @@ LRESULT app_window_proc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
           return 0;
 
         case FD_READ:
-          network_recv_invoke(wParam, &do_something);
+          network_recv_invoke(wParam, &invoke_url);
           return 0;
       }
       MessageBox( NULL, _T("This aint right..."), THIS_TITLE,
