@@ -1,4 +1,3 @@
-
 TOOLPATH = i586-mingw32msvc-
 CC = $(TOOLPATH)cc
 
@@ -9,7 +8,6 @@ CFLAGS = -mno-cygwin -Wall -Werror -O2 -D_WINDOWS \
 
 LIBS = -lws2_32  # WinSockets
 
-# to debug, comment out next line
 DEBUG_MODE =
 PROD_MODE = -mwindows
 
