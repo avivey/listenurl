@@ -1,5 +1,6 @@
 #include "trayicon.h"
 #include "network.h"
+#include "shellapi.h"
 
 #define SOCKET_MESSAGE (WM_APP + 100)
 
@@ -28,7 +29,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
                        0, 0, 0, 100, 100, NULL, NULL, hInst, NULL );
 
   if ( ! hWnd ) {
-      MessageBox( NULL, "Ack! I can't create the window!", THIS_TITLE,
+      MessageBox( NULL, _T("Ack! I can't create the window!"), THIS_TITLE,
                   MB_ICONERROR | MB_OK | MB_TOPMOST );
       return 1;
   }
@@ -57,9 +58,9 @@ void on_close_listener( HWND hWnd )
   network_stop();
 }
 
-int do_something(wchar_t* t) {
-  return MessageBox( NULL, "got msg", "eek",
-                    MB_ICONERROR | MB_OK | MB_TOPMOST );
+int do_something(LPCTSTR t) {
+  // return MessageBox( NULL, "got msg", "eek",
+                    // MB_ICONERROR | MB_OK | MB_TOPMOST );
 }
 
 LRESULT app_window_proc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
@@ -77,7 +78,7 @@ LRESULT app_window_proc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
           network_recv_invoke(wParam, &do_something);
           return 0;
       }
-      MessageBox( NULL, "This aint right...", THIS_TITLE,
+      MessageBox( NULL, _T("This aint right..."), THIS_TITLE,
                   MB_ICONERROR | MB_OK | MB_TOPMOST );
       return -1;
 

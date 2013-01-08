@@ -1,12 +1,13 @@
 #ifndef _TRAYICON_H
 #define _TRAYICON_H
 
+#include <tchar.h>
 #include <windows.h>
 
-#define HELP_ABOUT "listenurl: Listen on TCP for a url, then open it."
+#define HELP_ABOUT _T("listenurl: Listen on TCP for a url, then open it.")
 
-#define THIS_CLASSNAME      "ListenUrl"
-#define THIS_TITLE          "About: ListenUrl"
+#define THIS_CLASSNAME      _T("ListenUrl")
+#define THIS_TITLE          _T("About: ListenUrl")
 
 
 enum {
@@ -24,10 +25,10 @@ void (*app_close_listener)( HWND );
 LRESULT (*WindowProc_fallback)( HWND, UINT, WPARAM, LPARAM );
 
 
-void    AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
-                     LPSTR pszToolTip );
-void    RemoveTrayIcon( HWND hWnd, UINT uID);
-void    ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPSTR pszToolTip );
+// void    AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
+                     // LPSTR pszToolTip );
+// void    RemoveTrayIcon( HWND hWnd, UINT uID);
+// void    ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPSTR pszToolTip );
 
 HICON   LoadSmallIcon( HINSTANCE hInstance, UINT uID );
 

@@ -12,7 +12,7 @@ static BOOL g_bModalState       = FALSE;
 //-----------------------------------------------------------------------------
 //  Add an icon to the system tray.
 void AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
-                  LPSTR pszToolTip )
+                  LPTSTR pszToolTip )
 {
   NOTIFYICONDATA  nid;
 
@@ -29,22 +29,22 @@ void AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
 
   //  Comment this if you've got your own icon.
   {
-    char    szIconFile[512];
+    TCHAR    szIconFile[512];
     GetSystemDirectory( szIconFile, sizeof( szIconFile ) );
-    if ( szIconFile[ strlen( szIconFile ) - 1 ] != '\\' )
-        strcat( szIconFile, "\\" );
-    strcat( szIconFile, "shell32.dll" );
+    if ( szIconFile[ lstrlen( szIconFile ) - 1 ] != '\\' )
+        lstrcat( szIconFile, _T("\\") );
+    lstrcat( szIconFile, _T("shell32.dll") );
     ExtractIconEx( szIconFile, 17, NULL, &(nid.hIcon), 1 );
   }
 
-  strcpy( nid.szTip, pszToolTip );
+  lstrcpy( nid.szTip, pszToolTip );
 
   Shell_NotifyIcon( NIM_ADD, &nid );
 }
 
 
 //-----------------------------------------------------------------------------
-void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPSTR pszToolTip )
+void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPTSTR pszToolTip )
 {
     NOTIFYICONDATA  nid;
 
@@ -60,7 +60,7 @@ void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPSTR pszToolTip )
     }
 
     if ( pszToolTip ) {
-        strcpy( nid.szTip, pszToolTip );
+        lstrcpy( nid.szTip, pszToolTip );
         nid.uFlags  |= NIF_TIP;
     }
 
@@ -176,8 +176,8 @@ BOOL ShowPopupMenu( HWND hWnd, POINT *curpos, int wDefaultItem )
         curpos = &pt;
     }
 
-    InsertMenu( hPop, i++, MF_BYPOSITION | MF_STRING, ID_ABOUT, "About..." );
-    InsertMenu( hPop, i++, MF_BYPOSITION | MF_STRING, ID_EXIT, "Exit" );
+    InsertMenu( hPop, i++, MF_BYPOSITION | MF_STRING, ID_ABOUT, _T("About...") );
+    InsertMenu( hPop, i++, MF_BYPOSITION | MF_STRING, ID_EXIT, _T("Exit") );
 
     SetMenuDefaultItem( hPop, ID_ABOUT, FALSE );
 

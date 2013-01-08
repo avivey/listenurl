@@ -5,7 +5,7 @@
 
 void network_start( HWND hWnd, UINT messageCode );
 int network_accept();
-int network_recv_invoke(WPARAM socket, int (*handle_message)(wchar_t *) );
+int network_recv_invoke(WPARAM socket, int (*handle_message)(LPCTSTR) );
 void network_stop();
 
 #endif
