@@ -14,34 +14,32 @@ static BOOL g_bModalState       = FALSE;
 void AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
                   LPSTR pszToolTip )
 {
-    NOTIFYICONDATA  nid;
+  NOTIFYICONDATA  nid;
 
-    memset( &nid, 0, sizeof( nid ) );
+  memset( &nid, 0, sizeof( nid ) );
 
-    nid.cbSize              = sizeof( nid );
-    nid.hWnd                = hWnd;
-    nid.uID                 = uID;
-    nid.uFlags              = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-    nid.uCallbackMessage    = uCallbackMsg;
-    //  Uncomment this if you've got your own icon.  GetModuleHandle( NULL )
-    //  gives us our HINSTANCE.  I hate globals.
-//  nid.hIcon               = LoadSmallIcon( GetModuleHandle( NULL ), uIcon );
+  nid.cbSize              = sizeof( nid );
+  nid.hWnd                = hWnd;
+  nid.uID                 = uID;
+  nid.uFlags              = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+  nid.uCallbackMessage    = uCallbackMsg;
+  //  Uncomment this if you've got your own icon.  GetModuleHandle( NULL )
+  //  gives us our HINSTANCE.  I hate globals.
+  //  nid.hIcon               = LoadSmallIcon( GetModuleHandle( NULL ), uIcon );
 
-    //  Comment this if you've got your own icon.
-    {
+  //  Comment this if you've got your own icon.
+  {
     char    szIconFile[512];
-
     GetSystemDirectory( szIconFile, sizeof( szIconFile ) );
     if ( szIconFile[ strlen( szIconFile ) - 1 ] != '\\' )
         strcat( szIconFile, "\\" );
     strcat( szIconFile, "shell32.dll" );
-    //  Icon #23 (0-indexed) in shell32.dll is a "help" icon.
-    ExtractIconEx( szIconFile, 23, NULL, &(nid.hIcon), 1 );
-    }
+    ExtractIconEx( szIconFile, 17, NULL, &(nid.hIcon), 1 );
+  }
 
-    strcpy( nid.szTip, pszToolTip );
+  strcpy( nid.szTip, pszToolTip );
 
-    Shell_NotifyIcon( NIM_ADD, &nid );
+  Shell_NotifyIcon( NIM_ADD, &nid );
 }
 
 
@@ -75,15 +73,15 @@ void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPSTR pszToolTip )
 //  Remove an icon from the system tray.
 void RemoveTrayIcon( HWND hWnd, UINT uID )
 {
-    NOTIFYICONDATA  nid;
+  NOTIFYICONDATA  nid;
 
-    memset( &nid, 0, sizeof( nid ) );
+  memset( &nid, 0, sizeof( nid ) );
 
-    nid.cbSize  = sizeof( nid );
-    nid.hWnd    = hWnd;
-    nid.uID     = uID;
+  nid.cbSize  = sizeof( nid );
+  nid.hWnd    = hWnd;
+  nid.uID     = uID;
 
-    Shell_NotifyIcon( NIM_DELETE, &nid );
+  Shell_NotifyIcon( NIM_DELETE, &nid );
 }
 
 
@@ -145,6 +143,9 @@ void OnClose( HWND hWnd )
 {
     //  Remove icon from system tray.
     RemoveTrayIcon( hWnd, ID_TRAYICON );
+
+    if ( app_close_listener )
+      (*app_close_listener)( hWnd );
 
     PostQuitMessage( 0 );
 }

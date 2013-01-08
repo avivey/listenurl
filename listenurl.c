@@ -1,5 +1,7 @@
 #include "trayicon.h"
 
+void on_close_listener( HWND hWnd );
+
 //  Entry point
 int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
 {
@@ -9,7 +11,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
 
     //  Detect previous instance, and bail if there is one.
     if ( FindWindow( THIS_CLASSNAME, THIS_TITLE ) )
-        return 0;//SendMessage( hPrev, WM_CLOSE, 0, 0 );
+        return 0;
 
     //  We have to have a window, even though we never show it.  This is
     //  because the tray icon uses window messages to send notifications to
@@ -27,6 +29,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
         return 1;
     }
 
+    app_close_listener = &on_close_listener;
+
     //  Message loop
     while ( TRUE ) {
         bRet = GetMessage( &msg, NULL, 0, 0 );
@@ -41,3 +45,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE prev, LPSTR cmdline, int show )
     return msg.wParam;
 }
 
+void on_close_listener( HWND hWnd )
+{
+    MessageBox( NULL, "quithook", "quit hook",
+              MB_ICONINFORMATION  | MB_OK | MB_TOPMOST );
+}
