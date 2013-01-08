@@ -22,9 +22,6 @@ MODE = $(DEBUG_MODE)
 # CFLAGS += -D_WIN32_IE=0x0500
 # CFLAGS += -D_WIN32_WINDOWS=0x0410
 
-netdemo.exe: network.o netdemo.o
-	$(CC) $(MODE) -Wl -o $@ $^ $(LIBS)
-
 listenurl.exe: trayicon.o listenurl.o network.o
 	$(CC) $(MODE) -o $@ $^ $(LIBS)
 

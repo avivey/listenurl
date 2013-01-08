@@ -20,7 +20,9 @@ enum {
     ID_ABOUT,
 };
 
-void (*app_close_listener)( HWND hWnd ) ;
+void (*app_close_listener)( HWND );
+LRESULT (*WindowProc_fallback)( HWND, UINT, WPARAM, LPARAM );
+
 
 void    AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
                      LPSTR pszToolTip );

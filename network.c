@@ -13,7 +13,7 @@
 static SOCKET ListenSocket = INVALID_SOCKET;
 static BOOL inited = FALSE;
 
-void network_start()
+void network_start( HWND hWnd, UINT messageCode )
 {
   if ( inited )
     return;
@@ -68,6 +68,8 @@ void network_start()
       return;
   }
 
+  iResult = WSAAsyncSelect( ListenSocket, hWnd,messageCode, FD_ACCEPT | FD_READ);
+
   if ( listen( ListenSocket, SOMAXCONN ) == SOCKET_ERROR ) {
     printf( "Listen failed with error: %d\n", WSAGetLastError() );
     closesocket(ListenSocket);
@@ -76,27 +78,26 @@ void network_start()
   }
 }
 
-int network_loop(int (*handle_message)(wchar_t*))
+int network_accept()
 {
-  network_start();
-  if ( ListenSocket == INVALID_SOCKET )
-    return -1;
-  int iResult;
-
-  SOCKET ClientSocket = INVALID_SOCKET;
-
-  ClientSocket = accept(ListenSocket, NULL, NULL);
+  SOCKET ClientSocket = accept(ListenSocket, NULL, NULL);
   if (ClientSocket == INVALID_SOCKET) {
       printf("accept failed: %d\n", WSAGetLastError());
       closesocket(ListenSocket);
       return -2;
   }
 
+  return 0;
+}
+
+int network_recv_invoke(WPARAM socket, int (*handle_message)(wchar_t *) )
+{
+  int iResult;
   char recvbuf[BUFLEN];
   wchar_t textbuf[BUFLEN];
 
   do {
-      iResult = recv(ClientSocket, recvbuf, BUFLEN, 0);
+      iResult = recv(socket, recvbuf, BUFLEN, 0);
       if (iResult > 0) {
         printf("Bytes received: %d\n", iResult);
         recvbuf[iResult] = 0;
@@ -115,14 +116,15 @@ int network_loop(int (*handle_message)(wchar_t*))
           printf("Connection closing...\n");
       else {
           printf("recv failed: %d\n", WSAGetLastError());
-          closesocket(ClientSocket);
+          closesocket(socket);
+          socket = INVALID_SOCKET;
           return -3;
       }
 
   } while (iResult > 0);
 
-  iResult = shutdown(ClientSocket, SD_SEND);
-  closesocket(ClientSocket);
+  iResult = shutdown(socket, SD_SEND);
+  closesocket(socket);
 
   if (iResult == SOCKET_ERROR) {
     printf("shutdown failed: %d\n", WSAGetLastError());

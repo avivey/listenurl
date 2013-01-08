@@ -84,6 +84,13 @@ void RemoveTrayIcon( HWND hWnd, UINT uID )
   Shell_NotifyIcon( NIM_DELETE, &nid );
 }
 
+static LRESULT call_WindowProc_fallback(
+  HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+  return WindowProc_fallback ?
+    (*WindowProc_fallback)( hWnd, uMsg, wParam, lParam )
+  : DefWindowProc( hWnd, uMsg, wParam, lParam );
+}
 
 //-----------------------------------------------------------------------------
 //  OUR NERVE CENTER.
@@ -132,10 +139,10 @@ static LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 
         case WM_CLOSE:
             OnClose( hWnd );
-            return DefWindowProc( hWnd, uMsg, wParam, lParam );
+            return call_WindowProc_fallback( hWnd, uMsg, wParam, lParam );
 
         default:
-            return DefWindowProc( hWnd, uMsg, wParam, lParam );
+            return call_WindowProc_fallback( hWnd, uMsg, wParam, lParam );
     }
 }
 
