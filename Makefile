@@ -8,11 +8,8 @@ CFLAGS = -mno-cygwin -Wall -Werror -O2 -D_WINDOWS \
 
 LIBS = -lws2_32  # WinSockets
 
-DEBUG_MODE =
-PROD_MODE = -mwindows
-
-# MODE = $(PRODMODE)
-MODE = $(DEBUG_MODE)
+# remove -mwindows to have an stdout.
+LINK_FLAGS = -mwindows
 
 # probably not needed
 # RCFLAGS = $(RCINC) --define WIN32=1 --define _WIN32=1 --define WINVER=0x0400
@@ -21,7 +18,7 @@ MODE = $(DEBUG_MODE)
 # CFLAGS += -D_WIN32_WINDOWS=0x0410
 
 listenurl.exe: trayicon.o listenurl.o network.o
-	$(CC) $(MODE) -o $@ $^ $(LIBS)
+	$(CC) $(LINK_FLAGS) -o $@ $^ $(LIBS)
 
 netdemo.o: network.h
 listenurl.o: trayicon.h network.h
