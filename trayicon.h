@@ -4,10 +4,10 @@
 #include <tchar.h>
 #include <windows.h>
 
-#define HELP_ABOUT _T("listenurl: Listen on TCP for a url, then open it.")
+#define HELP_ABOUT _T("Listens on TCP URIs to open.\n\ngithub.com/avivey/listenurl")
 
 #define THIS_CLASSNAME      _T("ListenUrl")
-#define THIS_TITLE          _T("About: ListenUrl")
+#define THIS_TITLE          _T("ListenUrl")
 
 
 enum {
