@@ -1,15 +1,34 @@
 //-----------------------------------------------------------------------------
 //  trayicon.c
 //
-//  Including most ui.
+//  Including most ui and message-piping.
 //  Based on trayicon.c by wharfinger 8/05/2001
 //-----------------------------------------------------------------------------
 
 #include "trayicon.h"
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// More forward declerations...
+HICON   LoadSmallIcon( HINSTANCE hInstance, UINT uID );
+
+BOOL    ShowPopupMenu( HWND hWnd, POINT *curpos, int wDefaultItem );
+void    OnInitMenuPopup( HWND hWnd, HMENU hMenu, UINT uID );
+
+BOOL    OnCommand( HWND hWnd, WORD wID, HWND hCtl );
+
+void    OnTrayIconMouseMove( HWND hWnd );
+void    OnTrayIconRBtnUp( HWND hWnd );
+void    OnTrayIconLBtnDblClick( HWND hWnd );
+
+void    OnClose( HWND hWnd );
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+
+
 static BOOL g_bModalState       = FALSE;
 
-//-----------------------------------------------------------------------------
 //  Add an icon to the system tray.
 void AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
                   LPTSTR pszToolTip )
@@ -43,7 +62,6 @@ void AddTrayIcon( HWND hWnd, UINT uID, UINT uCallbackMsg, UINT uIcon,
 }
 
 
-//-----------------------------------------------------------------------------
 void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPTSTR pszToolTip )
 {
     NOTIFYICONDATA  nid;
@@ -69,7 +87,6 @@ void ModifyTrayIcon( HWND hWnd, UINT uID, UINT uIcon, LPTSTR pszToolTip )
 }
 
 
-//-----------------------------------------------------------------------------
 //  Remove an icon from the system tray.
 void RemoveTrayIcon( HWND hWnd, UINT uID )
 {
@@ -92,7 +109,6 @@ static LRESULT call_WindowProc_fallback(
   : DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
 
-//-----------------------------------------------------------------------------
 //  OUR NERVE CENTER.
 static LRESULT CALLBACK WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                                     LPARAM lParam )
@@ -197,7 +213,6 @@ BOOL ShowPopupMenu( HWND hWnd, POINT *curpos, int wDefaultItem )
 }
 
 
-//-----------------------------------------------------------------------------
 BOOL OnCommand( HWND hWnd, WORD wID, HWND hCtl )
 {
     if ( g_bModalState )
@@ -223,7 +238,6 @@ BOOL OnCommand( HWND hWnd, WORD wID, HWND hCtl )
 }
 
 
-//-----------------------------------------------------------------------------
 //  When the mouse pointer drifts over the tray icon, a "tooltip" will be
 //  displayed.  Before that happens, we get notified about the movement, so we
 //  get a chance to set the "tooltip" text to be something useful.
@@ -233,7 +247,6 @@ void OnTrayIconMouseMove( HWND hWnd )
 }
 
 
-//-----------------------------------------------------------------------------
 //  Right-click on tray icon displays menu.
 void OnTrayIconRBtnUp( HWND hWnd )
 {
@@ -270,7 +283,6 @@ void OnTrayIconRBtnUp( HWND hWnd )
 }
 
 
-//-----------------------------------------------------------------------------
 void OnTrayIconLBtnDblClick( HWND hWnd )
 {
     SendMessage( hWnd, WM_COMMAND, ID_ABOUT, 0 );
