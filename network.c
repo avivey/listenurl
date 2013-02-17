@@ -3,11 +3,10 @@
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
-// #include <iphlpapi.h>
 #include <stdio.h>
 #include "network.h"
 
-#include "port-def.h"
+#define PORT "6663"
 #define BUFLEN 2048
 
 static SOCKET ListenSocket = INVALID_SOCKET;
@@ -28,8 +27,6 @@ void network_start( HWND hWnd, UINT messageCode )
   iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
   if (iResult != 0) {
       printf("WSAStartup failed: %d\n", iResult);
-  //    return 1;
-    return;
   }
 
   ZeroMemory(&hints, sizeof (hints));
@@ -44,7 +41,6 @@ void network_start( HWND hWnd, UINT messageCode )
       printf("getaddrinfo failed: %d\n", iResult);
 
       return;
-      // return 1;
   }
 
 
@@ -54,7 +50,6 @@ void network_start( HWND hWnd, UINT messageCode )
       printf("Error at socket(): %d\n", WSAGetLastError());
       freeaddrinfo(result);
 
-      // return 1;
       return;
   }
 
@@ -64,7 +59,6 @@ void network_start( HWND hWnd, UINT messageCode )
       printf("bind failed with error: %d\n", WSAGetLastError());
       closesocket(ListenSocket);
 
-      // return 1;
       return;
   }
 
