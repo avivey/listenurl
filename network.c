@@ -84,7 +84,7 @@ int network_accept()
   return 0;
 }
 
-int network_recv_invoke(WPARAM socket, int (*handle_message)(LPCTSTR) )
+int network_recv_invoke(WPARAM socket, HINSTANCE (*handle_message)(LPCTSTR) )
 {
   int iResult;
   char recvbuf[BUFLEN];

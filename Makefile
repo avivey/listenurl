@@ -14,7 +14,7 @@ listenurl.exe: trayicon.o listenurl.o network.o
 
 listenurl.o: trayicon.h network.h
 trayicon.o: trayicon.h
-network.o: network.h port-def.h
+network.o: network.h
 
 clean:
 	rm -f *.o *.exe

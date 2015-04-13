@@ -58,8 +58,8 @@ void on_close_listener( HWND hWnd )
   network_stop();
 }
 
-int invoke_url(LPCTSTR url) {
-  return (int)ShellExecute(NULL, _T("open"), _T("invoke-url.js"), url, NULL, SW_SHOWNORMAL );
+HINSTANCE invoke_url(LPCTSTR url) {
+  return ShellExecute(NULL, _T("open"), _T("invoke-url.js"), url, NULL, SW_SHOWNORMAL );
 }
 
 LRESULT app_window_proc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
