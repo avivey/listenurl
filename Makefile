@@ -8,6 +8,7 @@ LIBS = -lws2_32  # WinSockets
 
 # remove -mwindows to have an stdout.
 LINK_FLAGS = -mwindows
+LINK_FLAGS += -s  # Strip debug information
 
 listenurl.exe: trayicon.o listenurl.o network.o
 	$(CC) $(LINK_FLAGS) -o $@ $^ $(LIBS)
